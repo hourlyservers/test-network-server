@@ -1,0 +1,31 @@
+# .github/workflows/release.yml
+name: Build and release Go Project
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: marocchino/tool-versions-action@v1
+        id: versions
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "${{ steps.versions.outputs.golang }}"
+          go-version-file: "go.mod"
+
+      - run: go build -o test-network-server .
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: 'test-network-server'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
