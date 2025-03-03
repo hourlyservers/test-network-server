@@ -18,7 +18,7 @@ jobs:
         with:
           go-version-file: "go.mod"
 
-      - run: go build -o test-network-server .
+      - run: CGO_ENABLED=0 go build -o test-network-server .
 
       - name: Release
         uses: svenstaro/upload-release-action@v2
